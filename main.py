@@ -237,9 +237,38 @@ def rent_items():
                          condition=condition)
 
 @app.route('/share_items')
+@login_required
 def share_items():
     items = Item.query.filter_by(mode='share', availability='available').all()
     return render_template('share_items.html', items=items)
+
+@app.route('/share_item/<int:id>', methods=['GET', 'POST'])
+@login_required
+def share_item(id):
+    item = Item.query.get_or_404(id)
+    if request.method == 'POST':
+        purpose = request.form.get('purpose')
+        if not purpose:
+            flash('Please provide a purpose for sharing', 'danger')
+            return render_template('share_item.html', item=item)
+
+        # Create share record
+        share = Share(
+            item_id=item.id,
+            user_id=current_user.id,
+            purpose=purpose
+        )
+        
+        # Update item availability
+        item.availability = 'unavailable'
+        
+        db.session.add(share)
+        db.session.commit()
+        
+        flash('Item shared successfully!', 'success')
+        return redirect(url_for('share_items'))
+        
+    return render_template('share_item.html', item=item)
 
 @app.route('/buy_items')
 def buy_items():

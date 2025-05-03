@@ -9,16 +9,144 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary-color: #111111;
+            --secondary-color: #757575;
+            --accent-color: #fa5400;
+            --light-gray: #f5f5f5;
+            --dark-gray: #111111;
+            --white: #ffffff;
+            --hover-color: #7e7e7e;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+
+        body {
+            background-color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary-color);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
         .items-container {
+            background: rgba(245, 245, 245, 0.8);
+            border-radius: 1.5rem;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-primary,
+        .btn-info,
+        .btn-success,
+        .btn-warning,
+        .card .btn,
+        a.btn {
+            background-color: var(--accent-color) !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(250, 84, 0, 0.2) !important;
+            color: white !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 10 !important;
+        }
+
+        /* Force all buttons to be visible */
+        .card a.btn,
+        a.btn-primary,
+        a.btn-info,
+        a.btn-success,
+        a.btn-warning {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+        }
+
+        .btn-primary:hover,
+        .btn-info:hover,
+        .btn-success:hover,
+        .btn-warning:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .form-select {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 150px;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 1em;
+            padding-right: 40px;
+        }
+
+        .form-select:hover {
+            border-color: var(--accent-color);
+        }
+
+        .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(250, 84, 0, 0.1);
+            outline: none;
+        }
+
+        .form-select option {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-top: 50px;
+            color: var(--primary-color);
+            padding: 12px;
+            display: block;
+            font-size: 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .form-select option:hover,
+        .form-select option:focus,
+        .form-select option:checked {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
         }
         .card {
             transition: transform 0.3s ease;

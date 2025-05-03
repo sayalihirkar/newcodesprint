@@ -8,76 +8,593 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #111111;
+            --secondary-color: #757575;
+            --accent-color: #fa5400;
+            --light-gray: #f5f5f5;
+            --dark-gray: #111111;
+            --white: #ffffff;
+            --hover-color: #e64d00;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary-color);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .page-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&w=1920');
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .navbar {
+            background: var(--primary-color) !important;
+            box-shadow: none;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, rgba(17, 17, 17, 0.7) 0%, rgba(51, 51, 51, 0.7) 100%);
+            padding: 60px 0;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .welcome-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .welcome-content p {
+            font-size: 1.25rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
         .search-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            background: var(--light-gray);
+            padding: 32px;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 40px;
+            border: none;
+            position: relative;
+            z-index: 1;
         }
 
-        .search-bar .form-control {
-            height: 48px;
-            font-size: 16px;
-            border: 1px solid #d4d5d9;
-            padding-left: 16px;
-        }
-
+        .search-bar .form-control,
         .search-bar .form-select {
             height: 48px;
             font-size: 16px;
-            border: 1px solid #d4d5d9;
+            border: 1px solid #e0e0e0;
             padding-left: 16px;
-        }
-
-        .search-bar .btn {
-            padding: 0 24px;
-            font-size: 16px;
+            border-radius: 4px;
         }
 
         .search-bar .form-control:focus,
         .search-bar .form-select:focus {
-            border-color: #2c3e50;
-            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
         }
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Arial', sans-serif;
+
+        .search-bar .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #fa5400 !important;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(250, 84, 0, 0.2);
+            color: white !important;
         }
-        .navbar {
-            background-color: #2c3e50 !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .search-bar .btn:hover {
+            background-color: #e64d00 !important;
+            transform: translateY(-2px);
         }
+
+        /* Base button styles */
+        .btn {
+            border: none !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            transition: all 0.3s ease !important;
+            color: white !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+            pointer-events: auto !important;
+        }
+
+        /* Base button styles */
+        .btn {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            transition: all 0.3s ease !important;
+            color: white !important;
+        }
+
+        /* Navbar link styles - text only */
+        .navbar .nav-link,
+        .navbar a[href*='rent_items'],
+        .navbar a[href*='share_items'],
+        .navbar a[href*='buy_items'] {
+            background-color: transparent !important;
+            border: none !important;
+            color: var(--primary-color) !important;
+            box-shadow: none !important;
+            padding: 8px 16px !important;
+            font-weight: 500 !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar a[href*='rent_items']:hover,
+        .navbar a[href*='share_items']:hover,
+        .navbar a[href*='buy_items']:hover {
+            color: var(--accent-color) !important;
+            transform: translateY(-1px);
+        }
+
+        /* Action button styles */
+        .action-card .btn.btn-primary,
+        .rent-action .btn {
+            background-color: #0079bf !important;
+            box-shadow: 0 4px 15px rgba(0, 121, 191, 0.2) !important;
+        }
+        .action-card .btn.btn-primary:hover,
+        .rent-action .btn:hover {
+            background-color: #005a8c !important;
+            transform: translateY(-2px);
+        }
+
+        .action-card .btn.btn-success,
+        .share-action .btn {
+            background-color: #61bd4f !important;
+            box-shadow: 0 4px 15px rgba(97, 189, 79, 0.2) !important;
+        }
+        .action-card .btn.btn-success:hover,
+        .share-action .btn:hover {
+            background-color: #519839 !important;
+            transform: translateY(-2px);
+        }
+
+        .action-card .btn.btn-warning,
+        .buy-action .btn {
+            background-color: #ff9f1a !important;
+            box-shadow: 0 4px 15px rgba(255, 159, 26, 0.2) !important;
+        }
+        .action-card .btn.btn-warning:hover,
+        .buy-action .btn:hover {
+            background-color: #e68a00 !important;
+            transform: translateY(-2px);
+        }
+
+        .quick-add-section .btn {
+            background-color: #0079bf !important;
+            box-shadow: 0 4px 15px rgba(0, 121, 191, 0.2) !important;
+        }
+        .quick-add-section .btn:hover {
+            background-color: #005a8c !important;
+            transform: translateY(-2px);
+        }
+
+        /* Add item button styles */
+        a[href*='add_item'],
+        .quick-add-section .btn {
+            background-color: var(--add-color) !important;
+            box-shadow: 0 4px 15px rgba(0, 121, 191, 0.2) !important;
+        }
+        a[href*='add_item']:hover,
+        .quick-add-section .btn:hover {
+            background-color: var(--add-hover) !important;
+        }
+
+        .btn-primary:hover,
+        .btn-info:hover,
+        .btn-success:hover,
+        .btn-warning:hover,
+        .action-card .btn:hover,
+        .quick-add-section .btn:hover {
+            background-color: var(--hover-color) !important;
+            transform: translateY(-2px) !important;
+            color: white !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .form-select {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background-color: white;
+            color: var(--primary-color);
+            padding: 12px;
+        }
+
         .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
+
         .card-body {
             text-align: center;
+            padding: 2rem;
+            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
         .card-icon {
-            font-size: 3rem;
-            color: #2c3e50;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
         }
+        
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .quick-add-section {
+            background: rgba(245, 245, 245, 0.8);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Navbar brand and text styles */
+        .navbar-brand,
+        .navbar-brand span,
+        .navbar-nav .nav-item,
+        .navbar-nav .nav-link,
+        .navbar-nav .btn,
+        .navbar-nav a,
+        .navbar .dropdown-menu,
+        .navbar .dropdown-item,
+        /* Specific navbar items */
+        .navbar a[href*='rent_items'],
+        .navbar a[href*='share_items'],
+        .navbar a[href*='buy_items'],
+        .navbar a[href*='profile'],
+        .navbar a[href*='logout'] {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+            color: white !important;
+            background-color: transparent !important;
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            padding: 8px 16px !important;
+            font-size: 14px !important;
+            text-decoration: none !important;
+        }
+
+        /* Override any Bootstrap or custom styles that might hide these */
+        .navbar-nav,
+        .navbar-nav .nav-item,
+        .navbar-nav .nav-link,
+        .navbar-collapse {
+            display: flex !important;
+            align-items: center !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* Navbar hover effects */
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .btn:hover,
+        .navbar-nav a:hover,
+        .navbar .dropdown-item:hover {
+            color: white !important;
+            transform: translateY(-1px);
+        }
+
+        /* Navbar background and layout */
+        .navbar {
+            background-color: var(--primary-color) !important;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .navbar-collapse {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Ensure dropdown menus are white text on dark background */
+        .navbar .dropdown-menu {
+            background-color: var(--primary-color) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            margin-top: 0 !important;
+        }
+
+        .navbar .dropdown-item {
+            color: white !important;
+        }
+
+        .navbar .dropdown-item:hover {
+            background-color: rgba(255,255,255,0.1) !important;
+        }
+
+        /* Quick add button specific styles */
+        .quick-add-section .btn,
+        .navbar .btn-primary {
+            background-color: #0079bf !important;
+            color: white !important;
+            border: none !important;
+            padding: 8px 16px !important;
+            border-radius: 4px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            margin: 4px !important;
+        }
+
+        /* Style dropdown menus */
+        .navbar .dropdown-menu {
+            background-color: white !important;
+            border: 1px solid rgba(0,0,0,0.1) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+            position: absolute !important;
+            transform: none !important;
+        }
+
+        /* Keep add item button visible */
+        .quick-add-section .btn,
+        a[href*='add_item'],
+        button[onclick*='add_item'] {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+            background-color: #0079bf !important;
+            color: white !important;
+            border: none !important;
+            padding: 8px 16px !important;
+            border-radius: 4px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            margin: 4px !important;
+        }
+
+        .quick-add-section .btn:hover,
+        a[href*='add_item']:hover,
+        button[onclick*='add_item']:hover {
+            background-color: #005a8c !important;
+            transform: translateY(-1px);
+        }
+
+        /* Make add item button always visible */
+        a[href*='add_item'],
+        button[onclick*='add_item'],
+        .quick-add-section .btn {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+        }
+
+        .action-card .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 300px;
+        }
+        
+        .action-card .btn,
+        .quick-add-section .btn {
+            min-width: 200px;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Force buttons to be visible */
+        a[href*='rent_items'],
+        a[href*='share_items'],
+        a[href*='buy_items'],
+        a[href*='add_item'] {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            pointer-events: auto !important;
+        }
+
         .dashboard-section {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .footer {
-            background-color: #2c3e50 !important;
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 2rem;
+            background: rgba(245, 245, 245, 0.8);
+            border-radius: 1.5rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            color: #172b4d;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -1px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
+        }
+
+        .btn-info {
+            background-color: var(--secondary-blue);
+            border-color: var(--secondary-blue);
             color: white;
-            padding: 15px 0;
-            position: fixed;
+        }
+
+        .btn-info:hover {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
+            color: white;
+        }
+
+        .footer {
+            background: var(--primary-color) !important;
+            color: var(--white);
+            padding: 2rem 0;
+            /* position: fixed; */
             bottom: 0;
             width: 100%;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            height: 40px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -126,7 +643,12 @@
     <!-- Page Content -->
     <div class="container mt-5">
         <div class="dashboard-section">
-            <h1 class="text-center mb-4">Welcome to Student Management System</h1>
+            <div class="welcome-section">
+                <div class="welcome-content">
+                    <h1>Welcome to Student Management System</h1>
+                    <p>Manage your academic resources, share equipment, and collaborate with fellow students efficiently.</p>
+                </div>
+            </div>
             
             <!-- Global Search Bar -->
             <div class="row mb-4">
@@ -191,55 +713,52 @@
             </div>
             {% endif %}
             
-            <div class="row mb-4">
-                <div class="col-md-12">
+            <div class="mb-5">
+                <h2 class="section-title">Quick Add</h2>
+                <div class="quick-add-section">
                     <div class="card">
-                        <div class="card-body text-center">
-                            <i class="fas fa-plus-circle card-icon mb-3"></i>
-                            <h5 class="card-title">Add New Item</h5>
-                            <p class="card-text">Add new items for rent, share, or sale.</p>
-                            <a href="{{ url_for('add_item') }}" class="btn btn-primary">
+                        <div class="card-body text-center py-4">
+                            <i class="fas fa-plus-circle card-icon mb-4" style="color: var(--accent-color); font-size: 3.5rem;"></i>
+                            <h5 class="card-title mb-3">Add New Item</h5>
+                            <p class="card-text mb-4">Add new items for rent, share, or sale.</p>
+                            <a href="{{ url_for('add_item') }}" class="btn btn-primary" style="min-width: 200px;">
                                 <i class="fas fa-plus me-2"></i>Add Item
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <i class="fas fa-key card-icon"></i>
-                            <h5 class="card-title">Rent Items</h5>
-                            <p class="card-text">View and rent available items.</p>
-                            <a href="{{ url_for('rent_items') }}" class="btn btn-info">
-                                <i class="fas fa-search me-2"></i>View Rentals
-                            </a>
-                        </div>
+
+            <h2 class="section-title">Available Actions</h2>
+            <div class="dashboard-grid">
+                <div class="card action-card">
+                    <div class="card-body">
+                        <i class="fas fa-key card-icon mb-4" style="color: var(--accent-color);"></i>
+                        <h5 class="card-title mb-3">Rent Items</h5>
+                        <p class="card-text mb-4">Browse and rent available items.</p>
+                        <a href="{{ url_for('rent_items') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>View Rentals
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <i class="fas fa-share-alt card-icon"></i>
-                            <h5 class="card-title">Share Items</h5>
-                            <p class="card-text">View and share available items.</p>
-                            <a href="{{ url_for('share_items') }}" class="btn btn-success">
-                                <i class="fas fa-search me-2"></i>View Shared Items
-                            </a>
-                        </div>
+                <div class="card action-card">
+                    <div class="card-body">
+                        <i class="fas fa-share-alt card-icon mb-4" style="color: var(--accent-color);"></i>
+                        <h5 class="card-title mb-3">Share Items</h5>
+                        <p class="card-text mb-4">Share items with other students.</p>
+                        <a href="{{ url_for('share_items') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>View Shared Items
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <i class="fas fa-shopping-cart card-icon"></i>
-                            <h5 class="card-title">Buy Items</h5>
-                            <p class="card-text">View and purchase available items.</p>
-                            <a href="{{ url_for('buy_items') }}" class="btn btn-warning">
-                                <i class="fas fa-search me-2"></i>View Items for Sale
-                            </a>
-                        </div>
+                <div class="card action-card">
+                    <div class="card-body">
+                        <i class="fas fa-shopping-cart card-icon mb-4" style="color: var(--accent-color);"></i>
+                        <h5 class="card-title mb-3">Buy Items</h5>
+                        <p class="card-text mb-4">Purchase available items.</p>
+                        <a href="{{ url_for('buy_items') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>View Items for Sale
+                        </a>
                     </div>
                 </div>
             </div>
