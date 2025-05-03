@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header bg-warning">
+            <h3><i class="fas fa-shopping-cart me-2"></i>Buy Item</h3>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ item.name }}</h5>
+            <p class="card-text">{{ item.description }}</p>
+            <p><strong>Category:</strong> {{ item.category }}</p>
+            <p><strong>Available Quantity:</strong> {{ item.quantity }}</p>
+            <p><strong>Price per Item:</strong> ₹{{ '%.2f'|format(item.price) }}</p>
+
+            <form method="POST" id="purchaseForm">
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="{{ item.quantity }}" required>
+                </div>
+                <div class="mb-3">
+                    <p><strong>Total Cost:</strong> ₹<span id="totalCost">0.00</span></p>
+                </div>
+                
+                <!-- Payment Details -->
+                <div id="paymentDetails" class="mb-3" style="display: none;">
+                    <h5 class="mb-3">Payment Details</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Select Payment Method</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cardPayment" value="card" checked>
+                                <label class="form-check-label" for="cardPayment">Card Payment</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="upiPayment" value="upi">
+                                <label class="form-check-label" for="upiPayment">UPI Payment</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Payment Form -->
+                    <div id="cardPaymentForm">
+                        <div class="mb-3">
+                            <label for="cardName" class="form-label">Name on Card</label>
+                            <input type="text" class="form-control" id="cardName" name="cardName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" name="cardNumber" 
+                                   pattern="[0-9]{16}" maxlength="16" placeholder="1234 5678 9012 3456">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="expiryDate" class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiryDate" name="expiryDate" 
+                                       pattern="(0[1-9]|1[0-2])/[0-9]{2}" placeholder="MM/YY">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" name="cvv" 
+                                       pattern="[0-9]{3,4}" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UPI Payment Form -->
+                    <div id="upiPaymentForm" style="display: none;">
+                        <div class="mb-3">
+                            <label for="upiId" class="form-label">UPI ID</label>
+                            <input type="text" class="form-control" id="upiId" name="upiId" 
+                                   placeholder="username@upi">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Select UPI App</label>
+                            <div class="d-flex gap-3 flex-wrap">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="upiApp" id="googlePay" value="googlepay">
+                                    <label class="form-check-label" for="googlePay">Google Pay</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="upiApp" id="phonePe" value="phonepe">
+                                    <label class="form-check-label" for="phonePe">PhonePe</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="upiApp" id="paytm" value="paytm">
+                                    <label class="form-check-label" for="paytm">Paytm</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="upiApp" id="otherUpi" value="other">
+                                    <label class="form-check-label" for="otherUpi">Other UPI App</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" id="showPaymentBtn" class="btn btn-warning">Proceed to Payment</button>
+                <button type="submit" id="confirmPaymentBtn" class="btn btn-success" style="display: none;">Confirm Payment</button>
+                <a href="{{ url_for('buy_items') }}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update total cost when quantity changes
+    document.getElementById('quantity').addEventListener('input', function() {
+        const quantity = this.value;
+        const pricePerItem = parseFloat('{{ item.price }}');
+        const totalCost = (quantity * pricePerItem).toFixed(2);
+        document.getElementById('totalCost').textContent = totalCost;
+    });
+
+    // Show payment form when proceed to payment is clicked
+    document.getElementById('showPaymentBtn').addEventListener('click', function() {
+        const quantity = document.getElementById('quantity').value;
+        if (!quantity || quantity < 1) {
+            alert('Please enter a valid quantity');
+            return;
+        }
+        this.style.display = 'none';
+        document.getElementById('paymentDetails').style.display = 'block';
+        document.getElementById('confirmPaymentBtn').style.display = 'inline-block';
+    });
+
+    // Format card number with spaces
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+        let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        if (value.length > 16) value = value.substr(0, 16);
+        this.value = value;
+    });
+
+    // Format expiry date
+    document.getElementById('expiryDate').addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substr(0, 2) + '/' + value.substr(2);
+        }
+        this.value = value;
+    });
+
+    // Toggle payment forms based on selected payment method
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const cardForm = document.getElementById('cardPaymentForm');
+            const upiForm = document.getElementById('upiPaymentForm');
+            
+            if (this.value === 'card') {
+                cardForm.style.display = 'block';
+                upiForm.style.display = 'none';
+                // Reset UPI form
+                document.getElementById('upiId').removeAttribute('required');
+                document.querySelectorAll('input[name="upiApp"]').forEach(radio => radio.removeAttribute('required'));
+                // Make card fields required
+                document.getElementById('cardName').setAttribute('required', '');
+                document.getElementById('cardNumber').setAttribute('required', '');
+                document.getElementById('expiryDate').setAttribute('required', '');
+                document.getElementById('cvv').setAttribute('required', '');
+            } else {
+                cardForm.style.display = 'none';
+                upiForm.style.display = 'block';
+                // Reset card form
+                document.getElementById('cardName').removeAttribute('required');
+                document.getElementById('cardNumber').removeAttribute('required');
+                document.getElementById('expiryDate').removeAttribute('required');
+                document.getElementById('cvv').removeAttribute('required');
+                // Make UPI fields required
+                document.getElementById('upiId').setAttribute('required', '');
+                document.querySelectorAll('input[name="upiApp"]')[0].setAttribute('required', '');
+            }
+        });
+    });
+
+    // Validate form before submission
+    document.getElementById('purchaseForm').addEventListener('submit', function(e) {
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+        if (paymentMethod === 'card') {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (cardNumber.length !== 16) {
+                alert('Please enter a valid 16-digit card number');
+                e.preventDefault();
+                return;
+            }
+
+            if (!/^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(expiryDate)) {
+                alert('Please enter a valid expiry date (MM/YY)');
+                e.preventDefault();
+                return;
+            }
+
+            if (!/^[0-9]{3,4}$/.test(cvv)) {
+                alert('Please enter a valid CVV');
+                e.preventDefault();
+                return;
+            }
+        } else {
+            const upiId = document.getElementById('upiId').value;
+            const upiApp = document.querySelector('input[name="upiApp"]:checked');
+
+            if (!/^[\w.-]+@[\w.-]+$/.test(upiId)) {
+                alert('Please enter a valid UPI ID (e.g., username@upi)');
+                e.preventDefault();
+                return;
+            }
+
+            if (!upiApp) {
+                alert('Please select a UPI app');
+                e.preventDefault();
+                return;
+            }
+        }
+    });
+</script>
+{% endblock %}

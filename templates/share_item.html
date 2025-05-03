@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header bg-success text-white">
+            <h3><i class="fas fa-share-alt me-2"></i>Share Item</h3>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ item.name }}</h5>
+            <p class="card-text">{{ item.description }}</p>
+            <p><strong>Category:</strong> {{ item.category }}</p>
+            <p><strong>Available Quantity:</strong> {{ item.quantity }}</p>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="purpose" class="form-label">Purpose of Sharing</label>
+                    <textarea class="form-control" id="purpose" name="purpose" rows="3" required
+                        placeholder="Please describe why you need this item..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Request to Share</button>
+                <a href="{{ url_for('share_items') }}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

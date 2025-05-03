@@ -1,0 +1,15 @@
+<table>
+    <tr>
+      <th>Item Name</th>
+      <th>Quantity Sold</th>
+      <th>Sale Date</th>
+    </tr>
+    {% for sale in sales %}
+    <tr>
+      <td>{{ sale.item.name }}</td>
+      <td>{{ sale.quantity }}</td>
+      <td>{{ sale.sale_date }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  

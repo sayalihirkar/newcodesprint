@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Items - Campus Exchange{% endblock %}
+
+{% block head %}
+<style>
+    .search-bar {
+        background: var(--white);
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .search-bar .form-control {
+        height: 48px;
+        font-size: 16px;
+        border: 1px solid #d4d5d9;
+        padding-left: 16px;
+    }
+
+    .search-bar .btn {
+        padding: 0 24px;
+        font-size: 16px;
+    }
+
+    .search-bar .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255,63,108,0.1);
+    }
+    .filters-section {
+        background: var(--white);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+    }
+
+    .filters-title {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-color);
+        margin-bottom: 12px;
+    }
+
+    .filter-group {
+        margin-bottom: 16px;
+    }
+
+    .filter-label {
+        font-size: 13px;
+        color: var(--light-text);
+        margin-bottom: 8px;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 24px;
+        padding: 0;
+    }
+
+    .product-card {
+        background: var(--white);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .product-image {
+        position: relative;
+        padding-top: 133.33%;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-details {
+        padding: 16px;
+    }
+
+    .product-brand {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--text-color);
+    }
+
+    .product-name {
+        font-size: 14px;
+        color: var(--light-text);
+        margin-bottom: 8px;
+        height: 40px;
+        overflow: hidden;
+    }
+
+    .product-price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .current-price {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+    .wishlist-icon {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: var(--white);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .wishlist-icon:hover {
+        transform: scale(1.1);
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 24px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 48px 0;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        color: var(--light-text);
+        margin-bottom: 16px;
+    }
+
+    .empty-state p {
+        font-size: 16px;
+        color: var(--light-text);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Search Bar -->
+        <div class="col-12 mb-4">
+            <form class="search-bar" method="GET" action="{{ url_for('buy_items') }}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="q" value="{{ search_query }}" 
+                           placeholder="Search for lab equipment, books, tools...">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="col-lg-3 mb-4">
+            <div class="filters-section">
+                <h3 class="filters-title">Filters</h3>
+                <form id="filterForm" method="GET" action="{{ url_for('buy_items') }}">
+                    {% if search_query %}
+                    <input type="hidden" name="q" value="{{ search_query }}">
+                    {% endif %}
+
+                    <div class="filter-group">
+                        <div class="filter-label">Categories</div>
+                        <select class="form-select form-select-sm" name="category" onchange="this.form.submit()">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>
+                                {{ category }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-label">Price Range</div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-sm" name="min_price" 
+                                       placeholder="Min" value="{{ min_price }}">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-sm" name="max_price" 
+                                       placeholder="Max" value="{{ max_price }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-label">Condition</div>
+                        <select class="form-select form-select-sm" name="condition" onchange="this.form.submit()">
+                            <option value="">All Conditions</option>
+                            <option value="new" {% if condition == 'new' %}selected{% endif %}>New</option>
+                            <option value="like-new" {% if condition == 'like-new' %}selected{% endif %}>Like New</option>
+                            <option value="good" {% if condition == 'good' %}selected{% endif %}>Good</option>
+                            <option value="fair" {% if condition == 'fair' %}selected{% endif %}>Fair</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Apply Filters</button>
+                        <a href="{{ url_for('buy_items') }}" class="btn btn-outline-secondary btn-sm w-100 mt-2">Clear All</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="col-lg-9">
+            <h2 class="section-title">Items Available for Sale</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if items %}
+            <div class="product-grid">
+                {% for item in items %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if item.photo_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.photo_filename) }}" 
+                                 alt="{{ item.name }}">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                                <i class="fas fa-image fa-2x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="wishlist-icon">
+                            <i class="far fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-brand">{{ item.category }}</h3>
+                        <div class="product-name">{{ item.name }}</div>
+                        <div class="product-price">
+                            <span class="current-price">₹{{ '%.2f'|format(item.price) }}</span>
+                            {% if item.quantity > 0 %}
+                                <span class="badge badge-sale">{{ item.quantity }} left</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('buy_item', id=item.id) }}" class="btn btn-primary w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Buy Now
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <p>No items available for sale at the moment.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
